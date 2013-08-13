@@ -12,7 +12,7 @@ main = do
   home           <- getHomeDirectory
   let path        = home </> "data/todo.hs.txt"
 
-  prepareFiles path
+  ensureDataFile path
 
   dispatch command (path:args)
 
@@ -52,7 +52,7 @@ removeTask [path, indexStr] = do
       removeFile path
       renameFile tempPath path)
 
-prepareFiles path = doesFileExist path >>= \exists ->
+ensureDataFile path = doesFileExist path >>= \exists ->
   unless exists $ do
     writeFile path ""
 

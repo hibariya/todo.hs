@@ -1,9 +1,9 @@
+import Control.Applicative
+import Control.Exception
+import Data.List
+import System.Directory
 import System.Environment
 import System.IO
-import System.Directory
-import Data.List
-import Control.Exception
-import Control.Applicative
 
 main = do
   (command:args) <- getArgs

@@ -3,6 +3,7 @@ import System.IO
 import System.Directory
 import Data.List
 import Control.Exception
+import Control.Applicative
 
 main = do
   (command:args) <- getArgs
@@ -12,6 +13,7 @@ dispatch :: String -> [String] -> IO ()
 dispatch "add"    = addTask
 dispatch "list"   = listTasks
 dispatch "remove" = removeTask
+dispatch _        = \_ -> showUsage
 
 addTask :: [String] -> IO ()
 addTask [path, task] = appendFile path (task ++ "\n")
@@ -42,3 +44,11 @@ removeTask [path, indexStr] = do
       hClose tempHandle
       removeFile path
       renameFile tempPath path)
+
+showUsage :: IO ()
+showUsage = putStr $ concat $ (++ "\n") <$> [
+    "Usage:",
+    "  add [task content]",
+    "  list",
+    "  remove [index of task]"
+  ]

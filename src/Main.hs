@@ -1,13 +1,20 @@
 import Control.Applicative
 import Control.Exception
+import Control.Monad
 import Data.List
 import System.Directory
 import System.Environment
+import System.FilePath
 import System.IO
 
 main = do
   (command:args) <- getArgs
-  dispatch command args
+  home           <- getHomeDirectory
+  let path        = home </> "data/todo.hs.txt"
+
+  prepareFiles path
+
+  dispatch command (path:args)
 
 dispatch :: String -> [String] -> IO ()
 dispatch "add"    = addTask
@@ -44,6 +51,10 @@ removeTask [path, indexStr] = do
       hClose tempHandle
       removeFile path
       renameFile tempPath path)
+
+prepareFiles path = doesFileExist path >>= \exists ->
+  unless exists $ do
+    writeFile path ""
 
 showUsage :: IO ()
 showUsage = putStr $ concat $ (++ "\n") <$> [

@@ -19,6 +19,7 @@ addTask [path, task] = appendFile path (task ++ "\n")
 listTasks :: [String] -> IO ()
 listTasks [path] = do
   contents <- readFile path
+
   let tasks          = lines contents
       tasksWithIndex = zipWith (\i line -> show i ++ ":\t" ++ line) [0..] tasks
 
@@ -27,6 +28,7 @@ listTasks [path] = do
 removeTask :: [String] -> IO ()
 removeTask [path, indexStr] = do
   contents <- readFile path
+
   let tasks       = lines contents
       index       = read indexStr
       newContents = unlines $ delete (tasks !! index) tasks
@@ -35,7 +37,6 @@ removeTask [path, indexStr] = do
     (\(tempPath, tempHandle) -> do
       hClose tempHandle
       removeFile tempPath)
-
     (\(tempPath, tempHandle) -> do
       hPutStr tempHandle newContents
       hClose tempHandle
